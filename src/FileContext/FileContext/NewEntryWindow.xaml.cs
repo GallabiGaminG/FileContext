@@ -48,6 +48,26 @@ public partial class NewEntryWindow : Window
             return;
         }
 
+        string path = PathTextBox.Text.Trim();
+
+        if (!string.IsNullOrWhiteSpace(path) &&
+            !System.IO.Directory.Exists(path) &&
+            !System.IO.File.Exists(path))
+        {
+            MessageBoxResult pathResult = MessageBox.Show(
+                "Bu path şu an bulunamıyor:\n\n" +
+                path +
+                "\n\nYine de kaydetmek istiyor musun?",
+                "Path bulunamadı",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (pathResult != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         string status =
             (StatusComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString()
             ?? "Aktif";
@@ -56,7 +76,7 @@ public partial class NewEntryWindow : Window
         {
             Database.AddEntry(
                 TitleTextBox.Text.Trim(),
-                PathTextBox.Text.Trim(),
+                path,
                 DescriptionTextBox.Text.Trim(),
                 status,
                 NextActionTextBox.Text.Trim(),
@@ -65,7 +85,7 @@ public partial class NewEntryWindow : Window
         else
         {
             _entryToEdit.Title = TitleTextBox.Text.Trim();
-            _entryToEdit.Path = PathTextBox.Text.Trim();
+            _entryToEdit.Path = path;
             _entryToEdit.Description = DescriptionTextBox.Text.Trim();
             _entryToEdit.Status = status;
             _entryToEdit.NextAction = NextActionTextBox.Text.Trim();
