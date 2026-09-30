@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FileContext.Data;
 using FileContext.Models;
+using FileContext.Services;
 
 namespace FileContext;
 
@@ -135,5 +136,15 @@ public partial class MainWindow : Window
         Database.DeleteEntry(entry.Id);
 
         LoadEntries();
+    }
+
+    private async void EverythingTest_Click(object sender, RoutedEventArgs e)
+    {
+        List<string> results = await EverythingService.SearchAsync("persona");
+
+        MessageBox.Show(
+            $"Everything sonucu: {results.Count}\n\n" +
+            string.Join("\n", results.Take(10)),
+            "Everything Test");
     }
 }

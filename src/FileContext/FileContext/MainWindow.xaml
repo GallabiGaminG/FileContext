@@ -16,6 +16,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <Button Content="Everything Test"
+        Width="120"
+        Height="36"
+        DockPanel.Dock="Right"
+        Margin="10,0,0,0"
+        Click="EverythingTest_Click"/>
+        
         <TextBlock Text="FileContext"
                    FontSize="28"
                    FontWeight="SemiBold"
