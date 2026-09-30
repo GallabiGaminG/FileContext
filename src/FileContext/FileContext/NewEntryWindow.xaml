@@ -1,0 +1,138 @@
+﻿<Window x:Class="FileContext.NewEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Yeni Kayıt"
+        Height="700"
+        Width="600"
+        MinHeight="650"
+        MinWidth="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Yeni Bağlam Kaydı"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,12">
+            <TextBlock Text="Başlık"/>
+            <TextBox x:Name="TitleTextBox"
+                     Height="32"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Margin="0,0,0,12">
+
+            <TextBlock Text="Path"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="PathTextBox"
+                 Grid.Column="0"
+                 Height="32"
+                 VerticalContentAlignment="Center"/>
+
+                <Button Grid.Column="1"
+                Content="📁 Klasör Seç"
+                Width="110"
+                Height="32"
+                Margin="8,0,0,0"
+                Click="SelectFolder_Click"/>
+
+                <Button Grid.Column="2"
+                Content="📄 Dosya Seç"
+                Width="100"
+                Height="32"
+                Margin="8,0,0,0"
+                Click="SelectFile_Click"/>
+
+            </Grid>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,12">
+            <TextBlock Text="Durum"/>
+            <ComboBox x:Name="StatusComboBox"
+                      Height="32"
+                      SelectedIndex="0">
+
+                <ComboBoxItem Content="Aktif"/>
+                <ComboBoxItem Content="Askıda"/>
+                <ComboBoxItem Content="Düzenlenecek"/>
+                <ComboBoxItem Content="Taşınacak"/>
+                <ComboBoxItem Content="Geçici"/>
+                <ComboBoxItem Content="Arşiv"/>
+                <ComboBoxItem Content="Tamamlandı"/>
+
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Margin="0,0,0,12">
+            <TextBlock Text="Bağlam / Açıklama"/>
+
+            <TextBox x:Name="DescriptionTextBox"
+                     Height="70"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="5" Margin="0,0,0,12">
+            <TextBlock Text="Sonraki İşlem"/>
+
+            <TextBox x:Name="NextActionTextBox"
+                     Height="55"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="6" Margin="0,0,0,12">
+            <TextBlock Text="Etiketler"/>
+
+            <TextBox x:Name="TagsTextBox"
+                     Height="32"
+                     ToolTip="Örn: persona, wallpaper, archive"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="8"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+
+            <Button Content="İptal"
+                    Width="90"
+                    Height="34"
+                    Margin="0,0,8,0"
+                    IsCancel="True"
+                    Click="Cancel_Click"/>
+
+            <Button Content="Kaydet"
+                    Width="90"
+                    Height="34"
+                    IsDefault="True"
+                    Click="Save_Click"/>
+
+        </StackPanel>
+
+    </Grid>
+</Window>
