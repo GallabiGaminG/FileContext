@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="FileContext"
-        Height="650"
-        Width="1000"
-        MinHeight="500"
-        MinWidth="800"
+        Height="700"
+        Width="1100"
+        MinHeight="550"
+        MinWidth="850"
         WindowStartupLocation="CenterScreen">
 
     <Grid Margin="20">
@@ -16,20 +16,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button Content="Everything Test"
-        Width="120"
-        Height="36"
-        DockPanel.Dock="Right"
-        Margin="10,0,0,0"
-        Click="EverythingTest_Click"/>
-        
-        <TextBlock Text="FileContext"
-                   FontSize="28"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,16"/>
+        <TextBlock Grid.Row="0"
+           Text="FileContext"
+           FontSize="28"
+           FontWeight="SemiBold"
+           Margin="0,0,0,16"/>
 
+
+        <!-- ARAMA -->
         <DockPanel Grid.Row="1"
-                   Margin="0,0,0,16">
+           Margin="0,0,0,16">
 
             <Button Content="+ Yeni Kayıt"
                     Width="120"
@@ -44,129 +40,262 @@
                      VerticalContentAlignment="Center"
                      Padding="10,0"
                      TextChanged="SearchTextBox_TextChanged"
-                     ToolTip="Başlık, bağlam, sonraki işlem, etiket veya path ara..."/>
+                     ToolTip="Bağlam veya fiziksel dosya ara..."/>
 
         </DockPanel>
 
-        <ScrollViewer Grid.Row="2"
-                      VerticalScrollBarVisibility="Auto">
+        <Grid Grid.Row="2">
 
-            <ItemsControl x:Name="EntriesList">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+            <!-- FILECONTEXT KAYITLARI -->
+            <ScrollViewer Grid.Row="0"
+                  VerticalScrollBarVisibility="Auto">
 
-                        <Border BorderBrush="#D0D0D0"
+                <StackPanel>
+
+                    <TextBlock x:Name="ContextHeader"
+                               Text="Bağlam Kayıtları"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,10"/>
+
+                    <ItemsControl x:Name="EntriesList">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderBrush="#D0D0D0"
                                 BorderThickness="1"
                                 CornerRadius="6"
                                 Margin="0,0,0,12"
                                 Padding="16">
 
-                            <Grid>
+                                    <Grid>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                <!-- BAŞLIK -->
-                                <TextBlock Grid.Row="0"
+                                        <TextBlock Grid.Row="0"
                                            Text="{Binding Title}"
                                            FontSize="20"
                                            FontWeight="SemiBold"/>
 
-                                <!-- PATH -->
-                                <TextBlock Grid.Row="1"
+                                        <TextBlock Grid.Row="1"
                                            Text="{Binding Path}"
                                            Margin="0,8,0,16"
                                            Foreground="Gray"
                                            TextWrapping="Wrap"/>
 
-                                <!-- ALT BİLGİ ALANI -->
-                                <Grid Grid.Row="2">
+                                        <Grid Grid.Row="2">
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
 
-                                    <!-- SOL: BAĞLAM -->
-                                    <StackPanel Grid.Column="0">
+                                            <StackPanel Grid.Column="0">
 
-                                        <TextBlock Text="Bağlam / Açıklama"
+                                                <TextBlock Text="Bağlam / Açıklama"
                                                    FontWeight="SemiBold"
                                                    Margin="0,0,0,6"/>
 
-                                        <TextBlock Text="{Binding Description}"
+                                                <TextBlock Text="{Binding Description}"
                                                    TextWrapping="Wrap"/>
 
-                                    </StackPanel>
+                                                <StackPanel Orientation="Horizontal"
+                                                    Margin="0,18,0,0">
 
-                                    <!-- SAĞ: DURUM / SONRAKİ İŞLEM / ETİKET -->
-                                    <StackPanel Grid.Column="2">
+                                                    <Button Content="Aç"
+                                                    Width="70"
+                                                    Height="30"
+                                                    Margin="0,0,8,0"
+                                                    Tag="{Binding}"
+                                                    Click="OpenEntry_Click"/>
 
-                                        <TextBlock Text="Durum"
+                                                    <Button Content="Düzenle"
+                                                    Width="80"
+                                                    Height="30"
+                                                    Margin="0,0,8,0"
+                                                    Tag="{Binding}"
+                                                    Click="EditEntry_Click"/>
+
+                                                    <Button Content="Sil"
+                                                    Width="60"
+                                                    Height="30"
+                                                    Tag="{Binding}"
+                                                    Click="DeleteEntry_Click"/>
+
+                                                </StackPanel>
+
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+
+                                                <TextBlock Text="Durum"
                                                    FontWeight="SemiBold"/>
 
-                                        <TextBlock Text="{Binding Status}"
+                                                <TextBlock Text="{Binding Status}"
                                                    Margin="0,4,0,14"/>
 
-                                        <TextBlock Text="Sonraki İşlem"
+                                                <TextBlock Text="Sonraki İşlem"
                                                    FontWeight="SemiBold"/>
 
-                                        <TextBlock Text="{Binding NextAction}"
+                                                <TextBlock Text="{Binding NextAction}"
                                                    TextWrapping="Wrap"
                                                    Margin="0,4,0,14"/>
 
-                                        <TextBlock Text="Etiketler"
+                                                <TextBlock Text="Etiketler"
                                                    FontWeight="SemiBold"/>
 
-                                        <TextBlock Text="{Binding Tags}"
+                                                <TextBlock Text="{Binding Tags}"
                                                    Foreground="Gray"
                                                    TextWrapping="Wrap"
                                                    Margin="0,4,0,0"/>
 
-                                    </StackPanel>
+                                            </StackPanel>
 
-                                    <StackPanel Orientation="Horizontal"
-                                                Margin="0,18,0,0">
+                                        </Grid>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
+                </StackPanel>
+
+            </ScrollViewer>
+
+            <GridSplitter Grid.Row="1"
+              Height="6"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              ResizeDirection="Rows"
+              ResizeBehavior="PreviousAndNext"
+              Background="#D0D0D0"
+              Cursor="SizeNS"/>
+
+            <Grid Grid.Row="2">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- EVERYTHING BAŞLIK -->
+            <TextBlock x:Name="EverythingHeader"
+               Grid.Row="0"
+               Text="Everything Sonuçları"
+               FontSize="17"
+               FontWeight="SemiBold"
+               Margin="0,14,0,10"
+               Visibility="Collapsed"/>
+
+            <!-- VIRTUALIZED EVERYTHING RESULTS -->
+            <ListBox x:Name="EverythingResultsList"
+             Grid.Row="1"
+             BorderThickness="0"
+             Background="Transparent"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.CanContentScroll="True"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             VirtualizingPanel.IsVirtualizing="True"
+             VirtualizingPanel.VirtualizationMode="Recycling">
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch"/>
+                        <Setter Property="Padding"
+                        Value="0"/>
+                        <Setter Property="Margin"
+                        Value="0"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border BorderBrush="#E0E0E0"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Margin="0,0,0,6"
+                        Padding="10">
+
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding}"
+                                               VerticalAlignment="Center"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding}"
+                                               Margin="0,0,12,0"/>
+
+                                    <StackPanel Grid.Column="1"
+                                                Orientation="Horizontal">
+
+                                        <Button Content="Bağlama Ekle"
+                                                Width="105"
+                                                Height="28"
+                                                Margin="0,0,8,0"
+                                                Tag="{Binding}"
+                                                Click="AddEverythingResult_Click"/>
 
                                         <Button Content="Aç"
-                                                Width="70"
-                                                Height="30"
-                                                Margin="0,0,8,0"
-                                                Tag="{Binding}"
-                                                Click="OpenEntry_Click"/>
-
-                                        <Button Content="Düzenle"
-                                                Width="80"
-                                                Height="30"
-                                                Margin="0,0,8,0"
-                                                Tag="{Binding}"
-                                                Click="EditEntry_Click"/>
-
-                                        <Button Content="Sil"
                                                 Width="60"
-                                                Height="30"
+                                                Height="28"
                                                 Tag="{Binding}"
-                                                Click="DeleteEntry_Click"/>
+                                                Click="OpenEverythingResult_Click"/>
 
                                     </StackPanel>
 
                                 </Grid>
 
-                            </Grid>
-
-                        </Border>
+                            </Border>
 
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                </ListBox.ItemTemplate>
 
-            </ItemsControl>
+            </ListBox>
+            
+            </Grid>
+            
+            <Button x:Name="LoadMoreEverythingButton"
+            Grid.Row="3"
+            Content="Daha Fazla Göster"
+            Width="160"
+            Height="34"
+            HorizontalAlignment="Center"
+            Margin="0,10,0,0"
+            Visibility="Collapsed"
+            Click="LoadMoreEverything_Click"/>
 
-        </ScrollViewer>
+        </Grid>
 
     </Grid>
 </Window>

@@ -16,6 +16,25 @@ public partial class NewEntryWindow : Window
         InitializeComponent();
     }
 
+    public NewEntryWindow(string path)
+    {
+        InitializeComponent();
+
+        PathTextBox.Text = path;
+
+        if (System.IO.Directory.Exists(path))
+        {
+            TitleTextBox.Text =
+                System.IO.Path.GetFileName(
+                    path.TrimEnd('\\'));
+        }
+        else
+        {
+            TitleTextBox.Text =
+                System.IO.Path.GetFileNameWithoutExtension(path);
+        }
+    }
+
     public NewEntryWindow(ContextEntry entry)
     {
         InitializeComponent();

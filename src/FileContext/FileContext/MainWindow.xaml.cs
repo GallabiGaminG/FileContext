@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using FileContext.Data;
@@ -11,6 +14,14 @@ namespace FileContext;
 public partial class MainWindow : Window
 {
     private List<ContextEntry> _entries = new();
+
+    private CancellationTokenSource? _searchCancellation;
+
+    private const int EverythingPageSize = 50;
+
+    private int _visibleEverythingCount = EverythingPageSize;
+
+    private List<string> _allEverythingResults = new();
 
     public MainWindow()
     {
@@ -24,6 +35,8 @@ public partial class MainWindow : Window
         _entries = Database.GetEntries();
 
         EntriesList.ItemsSource = _entries;
+
+        ContextHeader.Text = $"Bağlam Kayıtları ({_entries.Count})";
     }
 
     private void NewEntry_Click(object sender, RoutedEventArgs e)
@@ -41,13 +54,30 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    private async void SearchTextBox_TextChanged(
+        object sender,
+        TextChangedEventArgs e)
     {
         string search = SearchTextBox.Text.Trim();
+
+        _searchCancellation?.Cancel();
+
+        _searchCancellation = new CancellationTokenSource();
+
+        CancellationToken token = _searchCancellation.Token;
 
         if (string.IsNullOrWhiteSpace(search))
         {
             EntriesList.ItemsSource = _entries;
+
+            ContextHeader.Text =
+                $"Bağlam Kayıtları ({_entries.Count})";
+
+            EverythingResultsList.ItemsSource = null;
+
+            EverythingHeader.Visibility =
+                Visibility.Collapsed;
+
             return;
         }
 
@@ -64,9 +94,77 @@ public partial class MainWindow : Window
             .ToList();
 
         EntriesList.ItemsSource = filtered;
+
+        ContextHeader.Text =
+            $"Bağlam Kayıtları ({filtered.Count})";
+
+        try
+        {
+            await Task.Delay(250, token);
+
+            _allEverythingResults =
+            await EverythingService.SearchAsync(search);
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _visibleEverythingCount = EverythingPageSize;
+
+            ShowEverythingResults();
+        }
+        catch (TaskCanceledException)
+        {
+            // Kullanıcı yazmaya devam etti.
+            // Eski aramayı göstermiyoruz.
+        }
+        catch (Exception ex)
+        {
+            EverythingResultsList.ItemsSource = null;
+
+            EverythingHeader.Text =
+                $"Everything kullanılamıyor: {ex.Message}";
+
+            EverythingHeader.Visibility =
+                Visibility.Visible;
+        }
     }
 
-    private void OpenEntry_Click(object sender, RoutedEventArgs e)
+    private void ShowEverythingResults()
+    {
+        List<string> visibleResults =
+            _allEverythingResults
+                .Take(_visibleEverythingCount)
+                .ToList();
+
+        EverythingResultsList.ItemsSource =
+            visibleResults;
+
+        int shownCount = visibleResults.Count;
+        int totalCount = _allEverythingResults.Count;
+
+        EverythingHeader.Text =
+            $"Everything Sonuçları ({totalCount}) — gösterilen {shownCount}";
+
+        LoadMoreEverythingButton.Visibility =
+            shownCount < totalCount
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+    }
+
+    private void LoadMoreEverything_Click(
+    object sender,
+    RoutedEventArgs e)
+    {
+        _visibleEverythingCount += EverythingPageSize;
+
+        ShowEverythingResults();
+    }
+
+    private void OpenEntry_Click(
+        object sender,
+        RoutedEventArgs e)
     {
         if (sender is not Button button ||
             button.Tag is not ContextEntry entry)
@@ -74,11 +172,29 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!System.IO.Directory.Exists(entry.Path) &&
-            !System.IO.File.Exists(entry.Path))
+        OpenPath(entry.Path);
+    }
+
+    private void OpenEverythingResult_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (sender is not Button button ||
+            button.Tag is not string path)
+        {
+            return;
+        }
+
+        OpenPath(path);
+    }
+
+    private static void OpenPath(string path)
+    {
+        if (!System.IO.Directory.Exists(path) &&
+            !System.IO.File.Exists(path))
         {
             MessageBox.Show(
-                "Bu path artık mevcut değil:\n\n" + entry.Path,
+                "Bu path şu an mevcut değil:\n\n" + path,
                 "Path bulunamadı",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -86,14 +202,16 @@ public partial class MainWindow : Window
             return;
         }
 
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        Process.Start(new ProcessStartInfo
         {
-            FileName = entry.Path,
+            FileName = path,
             UseShellExecute = true
         });
     }
 
-    private void EditEntry_Click(object sender, RoutedEventArgs e)
+    private void EditEntry_Click(
+        object sender,
+        RoutedEventArgs e)
     {
         if (sender is not Button button ||
             button.Tag is not ContextEntry entry)
@@ -114,7 +232,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private void DeleteEntry_Click(object sender, RoutedEventArgs e)
+    private void DeleteEntry_Click(
+        object sender,
+        RoutedEventArgs e)
     {
         if (sender is not Button button ||
             button.Tag is not ContextEntry entry)
@@ -138,13 +258,26 @@ public partial class MainWindow : Window
         LoadEntries();
     }
 
-    private async void EverythingTest_Click(object sender, RoutedEventArgs e)
+    private void AddEverythingResult_Click(
+    object sender,
+    RoutedEventArgs e)
     {
-        List<string> results = await EverythingService.SearchAsync("persona");
+        if (sender is not Button button ||
+            button.Tag is not string path)
+        {
+            return;
+        }
 
-        MessageBox.Show(
-            $"Everything sonucu: {results.Count}\n\n" +
-            string.Join("\n", results.Take(10)),
-            "Everything Test");
+        NewEntryWindow window = new(path)
+        {
+            Owner = this
+        };
+
+        bool? result = window.ShowDialog();
+
+        if (result == true)
+        {
+            LoadEntries();
+        }
     }
 }

@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +11,19 @@ namespace FileContext.Services;
 
 public static class EverythingService
 {
-    private const string EsExecutable =
-    @"C:\Program Files\Programlar\Tools\Everything\ES-1.1.0.38.x64\es.exe";
+    private static string GetEsExecutable()
+    {
+        string? configuredPath =
+            Environment.GetEnvironmentVariable("FILECONTEXT_ES_PATH");
+
+        if (!string.IsNullOrWhiteSpace(configuredPath) &&
+            File.Exists(configuredPath))
+        {
+            return configuredPath;
+        }
+
+        return "es.exe";
+    }
 
     public static async Task<List<string>> SearchAsync(string query)
     {
@@ -20,7 +36,7 @@ public static class EverythingService
 
         ProcessStartInfo startInfo = new()
         {
-            FileName = EsExecutable,
+            FileName = GetEsExecutable(),
             Arguments = $"\"{query}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
