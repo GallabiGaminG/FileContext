@@ -1,0 +1,12 @@
+FileContext uses the Everything search engine and Everything Command-line Interface (ES)
+developed by voidtools.
+
+Project:
+https://www.voidtools.com/
+
+Everything and ES are third-party components and are not developed by the FileContext project.
+
+The bundled es.exe is used to communicate with a locally installed and running
+Everything instance.
+
+Users must have Everything installed for FileContext filesystem search functionality.
