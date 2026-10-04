@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using FileContext.Data;
 using FileContext.Models;
 using FileContext.Services;
+using System.IO;
 
 namespace FileContext;
 
@@ -28,6 +29,75 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         LoadEntries();
+        LoadDrives();
+    }
+
+    private List<DriveInfoModel> LoadDriveInfo()
+    {
+        List<DriveInfoModel> drives = new();
+
+        foreach (DriveInfo drive in DriveInfo.GetDrives())
+        {
+            if (!drive.IsReady)
+                continue;
+
+            long totalSize = drive.TotalSize;
+            long freeSpace = drive.AvailableFreeSpace;
+            long usedSize = totalSize - freeSpace;
+
+            double usedPercentage =
+                totalSize > 0
+                    ? (double)usedSize / totalSize * 100
+                    : 0;
+
+            drives.Add(new DriveInfoModel
+            {
+                Name = drive.Name,
+                VolumeLabel = drive.VolumeLabel,
+                DriveType = drive.DriveType.ToString(),
+
+                TotalSize = totalSize,
+                UsedSize = usedSize,
+                FreeSpace = freeSpace,
+
+                UsedPercentage = usedPercentage,
+
+                TotalSizeText = FormatBytes(totalSize),
+                UsedSizeText = FormatBytes(usedSize),
+                FreeSpaceText = FormatBytes(freeSpace)
+            });
+        }
+
+        return drives;
+    }
+
+    private void LoadDrives()
+    {
+        List<DriveInfoModel> drives = LoadDriveInfo();
+
+        DrivesList.ItemsSource = drives;
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        const long KB = 1024;
+        const long MB = KB * 1024;
+        const long GB = MB * 1024;
+        const long TB = GB * 1024;
+
+        if (bytes >= TB)
+            return $"{(double)bytes / TB:0.00} TB";
+
+        if (bytes >= GB)
+            return $"{(double)bytes / GB:0.00} GB";
+
+        if (bytes >= MB)
+            return $"{(double)bytes / MB:0.00} MB";
+
+        if (bytes >= KB)
+            return $"{(double)bytes / KB:0.00} KB";
+
+        return $"{bytes} B";
     }
 
     private void LoadEntries()

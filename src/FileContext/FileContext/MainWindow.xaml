@@ -1,139 +1,245 @@
-﻿<Window x:Class="FileContext.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="FileContext"
-        Height="700"
-        Width="1100"
-        MinHeight="550"
-        MinWidth="850"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="FileContext.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="FileContext"
+    Width="1100"
+    Height="700"
+    MinWidth="850"
+    MinHeight="550"
+    WindowStartupLocation="CenterScreen">
 
     <Grid Margin="20">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-           Text="FileContext"
-           FontSize="28"
-           FontWeight="SemiBold"
-           Margin="0,0,0,16"/>
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,16"
+            FontSize="28"
+            FontWeight="SemiBold"
+            Text="FileContext" />
 
 
-        <!-- ARAMA -->
-        <DockPanel Grid.Row="1"
-           Margin="0,0,0,16">
+        <!--  ARAMA  -->
+        <DockPanel Grid.Row="1" Margin="0,0,0,16">
 
-            <Button Content="+ Yeni Kayıt"
-                    Width="120"
-                    Height="36"
-                    DockPanel.Dock="Right"
-                    Margin="10,0,0,0"
-                    Click="NewEntry_Click"/>
+            <Button
+                Width="120"
+                Height="36"
+                Margin="10,0,0,0"
+                Click="NewEntry_Click"
+                Content="+ Yeni Kayıt"
+                DockPanel.Dock="Right" />
 
-            <TextBox x:Name="SearchTextBox"
-                     Height="36"
-                     FontSize="15"
-                     VerticalContentAlignment="Center"
-                     Padding="10,0"
-                     TextChanged="SearchTextBox_TextChanged"
-                     ToolTip="Bağlam veya fiziksel dosya ara..."/>
+            <TextBox
+                x:Name="SearchTextBox"
+                Height="36"
+                Padding="10,0"
+                VerticalContentAlignment="Center"
+                FontSize="15"
+                TextChanged="SearchTextBox_TextChanged"
+                ToolTip="Bağlam veya fiziksel dosya ara..." />
 
         </DockPanel>
 
-        <Grid Grid.Row="2">
+        <!--  STORAGE OVERVIEW  -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,16">
+
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="17"
+                FontWeight="SemiBold"
+                Text="Storage Overview" />
+
+            <ItemsControl x:Name="DrivesList">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border
+                            Width="245"
+                            Margin="0,0,10,10"
+                            Padding="12"
+                            BorderBrush="#D0D0D0"
+                            BorderThickness="1"
+                            CornerRadius="6">
+
+                            <StackPanel>
+
+                                <TextBlock FontSize="17" FontWeight="SemiBold">
+                                    <Run Text="{Binding Name}" />
+                                    <Run Text=" " />
+                                    <Run Text="{Binding VolumeLabel}" />
+                                </TextBlock>
+
+                                <TextBlock
+                                    Margin="0,3,0,10"
+                                    Foreground="Gray"
+                                    Text="{Binding DriveType}" />
+
+                                <ProgressBar
+                                    Height="8"
+                                    Margin="0,0,0,10"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Value="{Binding UsedPercentage}" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,8,3"
+                                        Text="Kullanılan:" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        Text="{Binding UsedSizeText}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,20,8,3"
+                                        Text="Boş:" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="0,20,0,3"
+                                        HorizontalAlignment="Right"
+                                        Text="{Binding FreeSpaceText}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,40,8,0"
+                                        Text="Toplam:" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="0,40,0,0"
+                                        HorizontalAlignment="Right"
+                                        Text="{Binding TotalSizeText}" />
+
+                                </Grid>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+
+        <Grid Grid.Row="3">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="6"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="6" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- FILECONTEXT KAYITLARI -->
-            <ScrollViewer Grid.Row="0"
-                  VerticalScrollBarVisibility="Auto">
+            <!--  FILECONTEXT KAYITLARI  -->
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
 
                 <StackPanel>
 
-                    <TextBlock x:Name="ContextHeader"
-                               Text="Bağlam Kayıtları"
-                               FontSize="17"
-                               FontWeight="SemiBold"
-                               Margin="0,0,0,10"/>
+                    <TextBlock
+                        x:Name="ContextHeader"
+                        Margin="0,0,0,10"
+                        FontSize="17"
+                        FontWeight="SemiBold"
+                        Text="Bağlam Kayıtları" />
 
                     <ItemsControl x:Name="EntriesList">
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
 
-                                <Border BorderBrush="#D0D0D0"
-                                BorderThickness="1"
-                                CornerRadius="6"
-                                Margin="0,0,0,12"
-                                Padding="16">
+                                <Border
+                                    Margin="0,0,0,12"
+                                    Padding="16"
+                                    BorderBrush="#D0D0D0"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
 
                                     <Grid>
 
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-                                        <TextBlock Grid.Row="0"
-                                           Text="{Binding Title}"
-                                           FontSize="20"
-                                           FontWeight="SemiBold"/>
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            FontSize="20"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding Title}" />
 
-                                        <TextBlock Grid.Row="1"
-                                           Text="{Binding Path}"
-                                           Margin="0,8,0,16"
-                                           Foreground="Gray"
-                                           TextWrapping="Wrap"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,8,0,16"
+                                            Foreground="Gray"
+                                            Text="{Binding Path}"
+                                            TextWrapping="Wrap" />
 
                                         <Grid Grid.Row="2">
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
 
                                             <StackPanel Grid.Column="0">
 
-                                                <TextBlock Text="Bağlam / Açıklama"
-                                                   FontWeight="SemiBold"
-                                                   Margin="0,0,0,6"/>
+                                                <TextBlock
+                                                    Margin="0,0,0,6"
+                                                    FontWeight="SemiBold"
+                                                    Text="Bağlam / Açıklama" />
 
-                                                <TextBlock Text="{Binding Description}"
-                                                   TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
 
-                                                <StackPanel Orientation="Horizontal"
-                                                    Margin="0,18,0,0">
+                                                <StackPanel Margin="0,18,0,0" Orientation="Horizontal">
 
-                                                    <Button Content="Aç"
-                                                    Width="70"
-                                                    Height="30"
-                                                    Margin="0,0,8,0"
-                                                    Tag="{Binding}"
-                                                    Click="OpenEntry_Click"/>
+                                                    <Button
+                                                        Width="70"
+                                                        Height="30"
+                                                        Margin="0,0,8,0"
+                                                        Click="OpenEntry_Click"
+                                                        Content="Aç"
+                                                        Tag="{Binding}" />
 
-                                                    <Button Content="Düzenle"
-                                                    Width="80"
-                                                    Height="30"
-                                                    Margin="0,0,8,0"
-                                                    Tag="{Binding}"
-                                                    Click="EditEntry_Click"/>
+                                                    <Button
+                                                        Width="80"
+                                                        Height="30"
+                                                        Margin="0,0,8,0"
+                                                        Click="EditEntry_Click"
+                                                        Content="Düzenle"
+                                                        Tag="{Binding}" />
 
-                                                    <Button Content="Sil"
-                                                    Width="60"
-                                                    Height="30"
-                                                    Tag="{Binding}"
-                                                    Click="DeleteEntry_Click"/>
+                                                    <Button
+                                                        Width="60"
+                                                        Height="30"
+                                                        Click="DeleteEntry_Click"
+                                                        Content="Sil"
+                                                        Tag="{Binding}" />
 
                                                 </StackPanel>
 
@@ -141,26 +247,24 @@
 
                                             <StackPanel Grid.Column="2">
 
-                                                <TextBlock Text="Durum"
-                                                   FontWeight="SemiBold"/>
+                                                <TextBlock FontWeight="SemiBold" Text="Durum" />
 
-                                                <TextBlock Text="{Binding Status}"
-                                                   Margin="0,4,0,14"/>
+                                                <TextBlock Margin="0,4,0,14" Text="{Binding Status}" />
 
-                                                <TextBlock Text="Sonraki İşlem"
-                                                   FontWeight="SemiBold"/>
+                                                <TextBlock FontWeight="SemiBold" Text="Sonraki İşlem" />
 
-                                                <TextBlock Text="{Binding NextAction}"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,4,0,14"/>
+                                                <TextBlock
+                                                    Margin="0,4,0,14"
+                                                    Text="{Binding NextAction}"
+                                                    TextWrapping="Wrap" />
 
-                                                <TextBlock Text="Etiketler"
-                                                   FontWeight="SemiBold"/>
+                                                <TextBlock FontWeight="SemiBold" Text="Etiketler" />
 
-                                                <TextBlock Text="{Binding Tags}"
-                                                   Foreground="Gray"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,4,0,0"/>
+                                                <TextBlock
+                                                    Margin="0,4,0,0"
+                                                    Foreground="Gray"
+                                                    Text="{Binding Tags}"
+                                                    TextWrapping="Wrap" />
 
                                             </StackPanel>
 
@@ -179,98 +283,101 @@
 
             </ScrollViewer>
 
-            <GridSplitter Grid.Row="1"
-              Height="6"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Center"
-              ResizeDirection="Rows"
-              ResizeBehavior="PreviousAndNext"
-              Background="#D0D0D0"
-              Cursor="SizeNS"/>
+            <GridSplitter
+                Grid.Row="1"
+                Height="6"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Background="#D0D0D0"
+                Cursor="SizeNS"
+                ResizeBehavior="PreviousAndNext"
+                ResizeDirection="Rows" />
 
             <Grid Grid.Row="2">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- EVERYTHING BAŞLIK -->
-            <TextBlock x:Name="EverythingHeader"
-               Grid.Row="0"
-               Text="Everything Sonuçları"
-               FontSize="17"
-               FontWeight="SemiBold"
-               Margin="0,14,0,10"
-               Visibility="Collapsed"/>
+                <!--  EVERYTHING BAŞLIK  -->
+                <TextBlock
+                    x:Name="EverythingHeader"
+                    Grid.Row="0"
+                    Margin="0,14,0,10"
+                    FontSize="17"
+                    FontWeight="SemiBold"
+                    Text="Everything Sonuçları"
+                    Visibility="Collapsed" />
 
-            <!-- VIRTUALIZED EVERYTHING RESULTS -->
-            <ListBox x:Name="EverythingResultsList"
-             Grid.Row="1"
-             BorderThickness="0"
-             Background="Transparent"
-             ScrollViewer.VerticalScrollBarVisibility="Auto"
-             ScrollViewer.CanContentScroll="True"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             VirtualizingPanel.IsVirtualizing="True"
-             VirtualizingPanel.VirtualizationMode="Recycling">
+                <!--  VIRTUALIZED EVERYTHING RESULTS  -->
+                <ListBox
+                    x:Name="EverythingResultsList"
+                    Grid.Row="1"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
 
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
 
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment"
-                        Value="Stretch"/>
-                        <Setter Property="Padding"
-                        Value="0"/>
-                        <Setter Property="Margin"
-                        Value="0"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
 
-                        <Border BorderBrush="#E0E0E0"
-                        BorderThickness="1"
-                        CornerRadius="5"
-                        Margin="0,0,0,6"
-                        Padding="10">
+                            <Border
+                                Margin="0,0,0,6"
+                                Padding="10"
+                                BorderBrush="#E0E0E0"
+                                BorderThickness="1"
+                                CornerRadius="5">
 
                                 <Grid>
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0"
-                                               Text="{Binding}"
-                                               VerticalAlignment="Center"
-                                               TextWrapping="NoWrap"
-                                               TextTrimming="CharacterEllipsis"
-                                               ToolTip="{Binding}"
-                                               Margin="0,0,12,0"/>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,12,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap"
+                                        ToolTip="{Binding}" />
 
-                                    <StackPanel Grid.Column="1"
-                                                Orientation="Horizontal">
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
 
-                                        <Button Content="Bağlama Ekle"
-                                                Width="105"
-                                                Height="28"
-                                                Margin="0,0,8,0"
-                                                Tag="{Binding}"
-                                                Click="AddEverythingResult_Click"/>
+                                        <Button
+                                            Width="105"
+                                            Height="28"
+                                            Margin="0,0,8,0"
+                                            Click="AddEverythingResult_Click"
+                                            Content="Bağlama Ekle"
+                                            Tag="{Binding}" />
 
-                                        <Button Content="Aç"
-                                                Width="60"
-                                                Height="28"
-                                                Tag="{Binding}"
-                                                Click="OpenEverythingResult_Click"/>
+                                        <Button
+                                            Width="60"
+                                            Height="28"
+                                            Click="OpenEverythingResult_Click"
+                                            Content="Aç"
+                                            Tag="{Binding}" />
 
                                     </StackPanel>
 
@@ -278,22 +385,23 @@
 
                             </Border>
 
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
 
-            </ListBox>
-            
+                </ListBox>
+
             </Grid>
-            
-            <Button x:Name="LoadMoreEverythingButton"
-            Grid.Row="3"
-            Content="Daha Fazla Göster"
-            Width="160"
-            Height="34"
-            HorizontalAlignment="Center"
-            Margin="0,10,0,0"
-            Visibility="Collapsed"
-            Click="LoadMoreEverything_Click"/>
+
+            <Button
+                x:Name="LoadMoreEverythingButton"
+                Grid.Row="3"
+                Width="160"
+                Height="34"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                Click="LoadMoreEverything_Click"
+                Content="Daha Fazla Göster"
+                Visibility="Collapsed" />
 
         </Grid>
 
