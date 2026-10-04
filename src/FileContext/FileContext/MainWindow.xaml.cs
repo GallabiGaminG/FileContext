@@ -9,6 +9,7 @@ using FileContext.Data;
 using FileContext.Models;
 using FileContext.Services;
 using System.IO;
+using System.Windows.Threading;
 
 namespace FileContext;
 
@@ -24,12 +25,15 @@ public partial class MainWindow : Window
 
     private List<string> _allEverythingResults = new();
 
+    private DispatcherTimer? _diskActivityTimer;
+
     public MainWindow()
     {
         InitializeComponent();
 
         LoadEntries();
         LoadDrives();
+        StartDiskActivityTimer();
     }
 
     private List<DriveInfoModel> LoadDriveInfo()
@@ -69,6 +73,67 @@ public partial class MainWindow : Window
         }
 
         return drives;
+    }
+
+    private void StartDiskActivityTimer()
+    {
+        _diskActivityTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+
+        _diskActivityTimer.Tick += DiskActivityTimer_Tick;
+        _diskActivityTimer.Start();
+    }
+
+    private void DiskActivityTimer_Tick(
+        object? sender,
+        EventArgs e)
+    {
+        UpdateDiskActivity();
+    }
+
+    private void UpdateDiskActivity()
+    {
+        Dictionary<string, (ulong Read, ulong Write)> activity =
+            DiskActivityService.GetLogicalDiskActivity();
+
+        if (DrivesList.ItemsSource is not List<DriveInfoModel> drives)
+            return;
+
+        foreach (DriveInfoModel drive in drives)
+        {
+            string driveLetter =
+                drive.Name.TrimEnd('\\');
+
+            if (activity.TryGetValue(
+                driveLetter,
+                out var values))
+            {
+                drive.ReadSpeedText =
+                    FormatSpeed(values.Read);
+
+                drive.WriteSpeedText =
+                    FormatSpeed(values.Write);
+            }
+            else
+            {
+                drive.ReadSpeedText = "0 MB/s";
+                drive.WriteSpeedText = "0 MB/s";
+            }
+        }
+
+        DrivesList.Items.Refresh();
+    }
+
+    private static string FormatSpeed(ulong bytesPerSecond)
+    {
+        const double MB = 1024 * 1024;
+
+        double value =
+            bytesPerSecond / MB;
+
+        return $"{value:0.0} MB/s";
     }
 
     private void LoadDrives()

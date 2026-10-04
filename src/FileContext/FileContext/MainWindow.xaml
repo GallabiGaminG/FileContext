@@ -88,6 +88,10 @@
                                     Foreground="Gray"
                                     Text="{Binding DriveType}" />
 
+                                <TextBlock Margin="0,0,0,3" Text="{Binding ReadSpeedText, StringFormat=Read: {0}}" />
+
+                                <TextBlock Margin="0,0,0,10" Text="{Binding WriteSpeedText, StringFormat=Write: {0}}" />
+
                                 <ProgressBar
                                     Height="8"
                                     Margin="0,0,0,10"

@@ -478,13 +478,13 @@ DEVELOPMENT PRINCIPLES
 
 \#### Storage Overview v1.1
 
-\- \[ ] Canlı disk aktivitesi
+\- \[x] Canlı disk aktivitesi
 
-\- \[ ] Read MB/s
+\- \[x] Read MB/s
 
-\- \[ ] Write MB/s
+\- \[x] Write MB/s
 
-\- \[ ] Aktivite değerlerini periyodik yenileme
+\- \[x] Aktivite değerlerini periyodik yenileme
 
 
 

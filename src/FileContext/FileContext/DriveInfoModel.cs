@@ -21,4 +21,7 @@ public class DriveInfoModel
     public string TotalSizeText { get; set; } = "";
     public string UsedSizeText { get; set; } = "";
     public string FreeSpaceText { get; set; } = "";
+
+    public string ReadSpeedText { get; set; } = "0 MB/s";
+    public string WriteSpeedText { get; set; } = "0 MB/s";
 }

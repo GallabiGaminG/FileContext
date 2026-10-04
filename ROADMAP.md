@@ -968,13 +968,13 @@ DEVELOPMENT PRINCIPLES
 
 \#### Storage Overview v1.1
 
-\- \[ ] Live disk activity
+\- \[x] Live disk activity
 
-\- \[ ] Read MB/s
+\- \[x] Read MB/s
 
-\- \[ ] Write MB/s
+\- \[x] Write MB/s
 
-\- \[ ] Periodic activity refresh
+\- \[x] Periodic activity refresh
 
 
 
