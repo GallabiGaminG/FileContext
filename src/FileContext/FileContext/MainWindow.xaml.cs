@@ -102,6 +102,9 @@ public partial class MainWindow : Window
         {
             await Task.Delay(250, token);
 
+            EverythingHeader.Text = "Everything aranıyor...";
+            EverythingHeader.Visibility = Visibility.Visible;
+
             _allEverythingResults =
             await EverythingService.SearchAsync(search);
 

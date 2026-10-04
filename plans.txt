@@ -1,0 +1,132 @@
+Ben yapılacakları şu şekilde toparlarım:
+
+Context çekirdeği
+Not
+Durum
+Sonraki işlem
+Etiket
+Eski path → yeni path
+Provenance / taşıma geçmişi
+Search
+Everything araması
+Context araması
+Sonuç limiti / sayfa boyutu ayarlanabilir
+Arama debounce süresi ayarlanabilir
+Gerekirse tarama kapsamı seçilebilir
+Storage Overview / Storage Map
+Disk adı, model, kapasite
+USB / SATA / NVMe
+HDD / SSD
+Sistem diski / harici disk
+Kullanılan / boş alan
+Steam benzeri görsel kapasite çubuğu
+Alan sınıflandırması
+Sistem / Dokunma
+Uygulamalar
+Kullanıcı verisi
+Temp / Cache
+Temizlenebilir
+Arşiv
+Taşınacak
+Düzenlenecek
+Duplicate şüphesi
+Aktif proje
+Boş alan
+Program bazında depolama analizi
+Programın kurulum alanı
+AppData
+ProgramData
+Cache
+Temp
+Logs
+Kullanıcı içerikleri
+“Bu program toplamda gerçekten ne kadar alan tüketiyor?”
+Duplicate Analyzer
+Önce hızlı filtre: boyut / isim / tarih
+Sonra gerekirse partial hash
+En son full hash
+Duplicate grupları
+Keep / Delete / Ignore / Keep Both
+Fiziksel duplicate silinse bile provenance kalsın
+Migration / Consolidation Assistant
+Eski disk
+_To_Sort
+Duplicate kontrolü
+Sınıflandırma
+Kalıcı hedef
+Eski path → yeni path
+Kaynak disk
+Taşıma tarihi
+Taşıma nedeni
+Durum
+Conflict Inbox
+Bu bence en önemli yeni özelliklerden biri.
+Aynı isim var ama dosya farklıysa overwrite yok
+“Şimdi karar ver”
+“Güvenli yedekle ve devam et”
+“Atla”
+Sonradan analiz
+Text dosyada diff
+Binary’de boyut / tarih / hash
+Kaynak ve hedef versiyon birlikte tutulabilir
+Safe Backup politikası
+Maksimum güvenli yedek boyutu
+Örneğin 50 GB / 100 GB / 500 GB gibi
+Kota yaklaşınca uyarı
+Eski conflict backup’larını temizleme politikası
+Büyük dosyalarda “yedeklemek pahalı” uyarısı
+Link / Junction / Shortcut desteği
+Dosya taşındıktan sonra eski konuma junction/symlink/kısayol öner
+Özellikle eski uygulama path’leri bozulmasın
+Ama izin ve uyumluluk konusunda güçlü uyarı ver
+Power User Settings
+Burada senin dediğin “legacy menü ama işlevsel” yaklaşımı çok mantıklı:
+File
+Edit
+View
+Search
+Tools
+Settings
+Help
+
+Ayarlarda:
+
+Everything sonuç limiti
+Page size
+Search debounce
+Virtualization davranışı
+Backup quota
+Hash stratejisi
+Tarama dizinleri
+Temp/cache kuralları
+Conflict default davranışı
+Duplicate derinliği
+Otomatik junction önerisi
+Riskli işlemlerde confirmation seviyesi
+Yeni ana navigasyon
+Mevcut kart UI’sına her şeyi sıkıştırmayalım.
+Bence bir noktada:
+Context
+Storage
+Duplicates
+Migration
+Settings
+
+gibi modüllere ayrılmalı.
+
+UI / kozmetik
+Gumball mavisi → Darwin turuncusu gradient
+Disk çubukları
+Durum renkleri
+Risk / güvenli / temp gibi görsel sınıflandırmalar
+Ama bunlar fonksiyonlardan sonra
+
+Ve bence ürünün ana prensibi artık şu:
+
+FileContext dosyaları yönetmekten çok, dosyalar hakkındaki kararları yönetiyor.
+
+Bu önemli fark. Explorer dosyayı taşır. Everything dosyayı bulur. Duplicate tool eşleşmeyi bulur. FileContext ise:
+
+“Bu dosya neden burada, bununla ne yapacaktım, bunun eski yeri neresiydi, bu kopya neden oluştu, güvenli karar ne?”
+
+diye bağlamı tutar.

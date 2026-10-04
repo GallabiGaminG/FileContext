@@ -59,11 +59,9 @@ public static class EverythingService
 
     public static async Task<List<string>> SearchAsync(string query)
     {
-        List<string> results = new();
-
         if (string.IsNullOrWhiteSpace(query))
         {
-            return results;
+            return new List<string>();
         }
 
         ProcessStartInfo startInfo = new()
@@ -83,19 +81,32 @@ public static class EverythingService
 
         process.Start();
 
-        while (!process.StandardOutput.EndOfStream)
-        {
-            string? line = await process.StandardOutput.ReadLineAsync();
+        Task<string> outputTask =
+            process.StandardOutput.ReadToEndAsync();
 
-            if (!string.IsNullOrWhiteSpace(line))
-            {
-                results.Add(line);
-            }
+        Task<string> errorTask =
+            process.StandardError.ReadToEndAsync();
+
+        await process.WaitForExitAsync()
+            .ConfigureAwait(false);
+
+        string output =
+            await outputTask.ConfigureAwait(false);
+
+        string error =
+            await errorTask.ConfigureAwait(false);
+
+        if (process.ExitCode != 0)
+        {
+            throw new InvalidOperationException(
+                $"Everything search failed: {error}");
         }
 
-        await process.WaitForExitAsync();
-
-        return results;
+        return output
+            .Split(
+                new[] { "\r\n", "\n" },
+                StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
     }
 
     private static readonly string[] CommonEverythingPaths =
