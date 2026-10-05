@@ -490,13 +490,13 @@ DEVELOPMENT PRINCIPLES
 
 \#### Storage Overview v1.2
 
-\- \[ ] Aktif I/O kullanan process
+\- \[x] Aktif I/O kullanan process
 
-\- \[ ] Process bazında disk kullanımı
+\- \[x] Process bazında disk kullanımı
 
-\- \[ ] Muhtemel source → destination ilişkisi
+\- \[x] Muhtemel source → destination ilişkisi
 
-\- \[ ] Tahmin edilen ilişkileri kesin bilgi gibi göstermeme
+\- \[x] Tahmin edilen ilişkileri kesin bilgi gibi göstermeme
 
 
 

@@ -9,6 +9,20 @@
     MinHeight="550"
     WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+
+        <Style x:Key="SelectableText" TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Cursor" Value="IBeam" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+    </Window.Resources>
+
     <Grid Margin="20">
 
         <Grid.RowDefinitions>
@@ -145,6 +159,186 @@
 
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <DockPanel Margin="0,6,0,8">
+
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+
+                    <TextBlock
+                        x:Name="LiveStatusText"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Foreground="Gray"
+                        Text="LIVE" />
+
+                    <Button
+                        x:Name="LivePauseButton"
+                        Width="80"
+                        Height="26"
+                        Click="ToggleLivePause_Click"
+                        Content="Pause" />
+
+                </StackPanel>
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="Active I/O Processes" />
+
+            </DockPanel>
+
+            <ItemsControl x:Name="ActiveProcessesList">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <Grid Margin="0,2,0,2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="110" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox
+                                Grid.Column="0"
+                                Style="{StaticResource SelectableText}"
+                                Text="{Binding Name}" />
+
+                            <TextBox
+                                Grid.Column="1"
+                                Style="{StaticResource SelectableText}"
+                                Text="{Binding ProcessId, StringFormat=PID {0}}" />
+
+                            <TextBox
+                                Grid.Column="2"
+                                Style="{StaticResource SelectableText}"
+                                Text="{Binding ReadSpeedText, StringFormat=Read: {0}}" />
+
+                            <TextBox
+                                Grid.Column="3"
+                                Style="{StaticResource SelectableText}"
+                                Text="{Binding WriteSpeedText, StringFormat=Write: {0}}" />
+
+                        </Grid>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+
+            <TextBlock
+                Margin="0,12,0,8"
+                FontSize="15"
+                FontWeight="SemiBold"
+                Text="Recent File I/O" />
+
+            <ListBox
+                x:Name="RecentFileIoList"
+                MaxHeight="160"
+                BorderBrush="#D0D0D0"
+                BorderThickness="1"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+                        <Grid Margin="6,3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{Binding ProcessName}" />
+
+                            <TextBlock Grid.Column="1" Text="{Binding ProcessId, StringFormat=PID {0}}" />
+
+                            <TextBlock
+                                Grid.Column="2"
+                                FontWeight="SemiBold"
+                                Text="{Binding Operation}" />
+
+                            <TextBox
+                                Grid.Column="3"
+                                Padding="0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                IsReadOnly="True"
+                                Text="{Binding Path}"
+                                TextWrapping="NoWrap"
+                                ToolTip="{Binding Path}" />
+
+                        </Grid>
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+
+            <TextBlock
+                Margin="0,12,0,8"
+                FontSize="15"
+                FontWeight="SemiBold"
+                Text="Probable Transfers" />
+
+            <ItemsControl x:Name="ProbableTransfersList">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border
+                            Margin="0,0,0,8"
+                            Padding="10"
+                            BorderBrush="#D0D0D0"
+                            BorderThickness="1"
+                            CornerRadius="5">
+
+                            <StackPanel>
+
+                                <TextBlock FontWeight="SemiBold">
+                                    <Run Text="{Binding ProcessName}" />
+                                    <Run Text="  " />
+                                    <Run Text="{Binding ProcessId, StringFormat=PID {0}}" />
+                                </TextBlock>
+
+                                <TextBox
+                                    Margin="0,5,0,2"
+                                    Padding="0"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    Text="{Binding SourcePath}"
+                                    ToolTip="{Binding SourcePath}" />
+
+                                <TextBlock
+                                    Margin="0,2"
+                                    FontWeight="SemiBold"
+                                    Text="↓" />
+
+                                <TextBox
+                                    Margin="0,2,0,4"
+                                    Padding="0"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    Text="{Binding TargetPath}"
+                                    ToolTip="{Binding TargetPath}" />
+
+                                <TextBlock Foreground="Gray" Text="{Binding Confidence, StringFormat=Confidence: {0}}" />
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
             </ItemsControl>
 
         </StackPanel>

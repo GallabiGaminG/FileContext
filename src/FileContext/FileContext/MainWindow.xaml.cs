@@ -27,6 +27,14 @@ public partial class MainWindow : Window
 
     private DispatcherTimer? _diskActivityTimer;
 
+    private List<ProcessIoInfo> _activeProcesses = new();
+
+    private readonly FileIoMonitorService _fileIoMonitor = new();
+
+    private List<ProbableTransferInfo> _probableTransfers = new();
+
+    private bool _isLivePaused;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -34,6 +42,8 @@ public partial class MainWindow : Window
         LoadEntries();
         LoadDrives();
         StartDiskActivityTimer();
+
+        _fileIoMonitor.Start();
     }
 
     private List<DriveInfoModel> LoadDriveInfo()
@@ -86,17 +96,63 @@ public partial class MainWindow : Window
         _diskActivityTimer.Start();
     }
 
-    private void DiskActivityTimer_Tick(
+    private async void DiskActivityTimer_Tick(
         object? sender,
         EventArgs e)
     {
-        UpdateDiskActivity();
+        if (_isLivePaused)
+            return;
+
+        _diskActivityTimer?.Stop();
+
+        try
+        {
+            await UpdateDiskActivityAsync();
+        }
+        finally
+        {
+            if (!_isLivePaused)
+                _diskActivityTimer?.Start();
+        }
     }
 
-    private void UpdateDiskActivity()
+    private async void ToggleLivePause_Click(
+    object sender,
+    RoutedEventArgs e)
     {
+        _isLivePaused = !_isLivePaused;
+
+        if (_isLivePaused)
+        {
+            _diskActivityTimer?.Stop();
+
+            LivePauseButton.Content = "Resume";
+            LiveStatusText.Text = "PAUSED — live data frozen for inspection";
+        }
+        else
+        {
+            LivePauseButton.Content = "Pause";
+            LiveStatusText.Text = "LIVE";
+
+            await UpdateDiskActivityAsync();
+
+            _diskActivityTimer?.Start();
+        }
+    }
+
+    private async Task UpdateDiskActivityAsync()
+    {
+        var diskActivityTask = Task.Run(
+            DiskActivityService.GetLogicalDiskActivity);
+
+        var processActivityTask = Task.Run(
+            ProcessActivityService.GetActiveProcesses);
+
         Dictionary<string, (ulong Read, ulong Write)> activity =
-            DiskActivityService.GetLogicalDiskActivity();
+            await diskActivityTask;
+
+        List<ProcessIoInfo> processes =
+            await processActivityTask;
 
         if (DrivesList.ItemsSource is not List<DriveInfoModel> drives)
             return;
@@ -124,6 +180,24 @@ public partial class MainWindow : Window
         }
 
         DrivesList.Items.Refresh();
+
+        _activeProcesses = processes;
+
+        ActiveProcessesList.ItemsSource =
+            _activeProcesses;
+
+        RecentFileIoList.ItemsSource =
+        _fileIoMonitor.GetRecentEvents(20);
+
+        List<FileIoActivity> correlationEvents =
+        _fileIoMonitor.GetRecentEventsSnapshot();
+
+        _probableTransfers =
+            TransferCorrelationService.FindProbableTransfers(
+                correlationEvents);
+
+        ProbableTransfersList.ItemsSource =
+            _probableTransfers;
     }
 
     private static string FormatSpeed(ulong bytesPerSecond)
@@ -417,5 +491,12 @@ public partial class MainWindow : Window
         {
             LoadEntries();
         }
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        _fileIoMonitor.Dispose();
+
+        base.OnClosed(e);
     }
 }

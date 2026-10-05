@@ -980,13 +980,13 @@ DEVELOPMENT PRINCIPLES
 
 \#### Storage Overview v1.2
 
-\- \[ ] Active I/O process
+\- \[x] Active I/O process
 
-\- \[ ] Per-process disk usage
+\- \[x] Per-process disk usage
 
-\- \[ ] Probable source → destination relationship
+\- \[x] Probable source → destination relationship
 
-\- \[ ] Never present inferred relationships as confirmed facts
+\- \[x] Never present inferred relationships as confirmed facts
 
 
 
