@@ -128,9 +128,9 @@ Free: 10.9 TB
 
 ### Remaining hardware identity layer
 
-- [ ] Physical disk model
-- [ ] HDD / SSD detection
-- [ ] USB / SATA / NVMe detection
+- [x] Physical disk model
+- [x] HDD / SSD detection
+- [x] USB / SATA / NVMe detection
 - [ ] System / external / removable classification
 - [ ] Human-readable device identity
 

@@ -50,6 +50,10 @@ public partial class MainWindow : Window
     {
         List<DriveInfoModel> drives = new();
 
+        Dictionary<string, (string Model, string MediaType, string BusType)>
+    hardwareInfo =
+        StorageHardwareService.GetLogicalDriveHardwareInfo();
+
         foreach (DriveInfo drive in DriveInfo.GetDrives())
         {
             if (!drive.IsReady)
@@ -64,6 +68,13 @@ public partial class MainWindow : Window
                     ? (double)usedSize / totalSize * 100
                     : 0;
 
+            string driveLetter =
+    drive.Name.TrimEnd('\\');
+
+            hardwareInfo.TryGetValue(
+                driveLetter,
+                out var hardware);
+
             drives.Add(new DriveInfoModel
             {
                 Name = drive.Name,
@@ -75,6 +86,13 @@ public partial class MainWindow : Window
                 FreeSpace = freeSpace,
 
                 UsedPercentage = usedPercentage,
+
+                PhysicalModel = hardware.Model ?? "",
+                MediaType = hardware.MediaType ?? "",
+                BusType = hardware.BusType ?? "",
+
+                DeviceTypeText =
+    $"{hardware.MediaType} / {hardware.BusType}".Trim(' ', '/'),
 
                 TotalSizeText = FormatBytes(totalSize),
                 UsedSizeText = FormatBytes(usedSize),

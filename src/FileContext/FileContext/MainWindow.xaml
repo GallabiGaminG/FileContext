@@ -98,9 +98,16 @@
                                 </TextBlock>
 
                                 <TextBlock
-                                    Margin="0,3,0,10"
-                                    Foreground="Gray"
-                                    Text="{Binding DriveType}" />
+                                    FontSize="12"
+                                    Text="{Binding PhysicalModel}"
+                                    TextWrapping="Wrap"
+                                    ToolTip="{Binding PhysicalModel}" />
+
+                                <TextBlock
+                                    Margin="0,2,0,10"
+                                    FontSize="11"
+                                    Opacity="0.75"
+                                    Text="{Binding DeviceTypeText}" />
 
                                 <TextBlock Margin="0,0,0,3" Text="{Binding ReadSpeedText, StringFormat=Read: {0}}" />
 

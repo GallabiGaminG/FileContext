@@ -128,9 +128,9 @@ Boş: 10.9 TB
 
 ### Storage Overview — kalan donanım kimliği katmanı
 
-- [ ] Fiziksel disk modeli
-- [ ] HDD / SSD tespiti
-- [ ] USB / SATA / NVMe tespiti
+- [x] Fiziksel disk modeli
+- [x] HDD / SSD tespiti
+- [x] USB / SATA / NVMe tespiti
 - [ ] Sistem diski / harici / removable ayrımı
 - [ ] İnsan okunur cihaz kimliği
 

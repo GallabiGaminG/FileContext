@@ -24,4 +24,9 @@ public class DriveInfoModel
 
     public string ReadSpeedText { get; set; } = "0 MB/s";
     public string WriteSpeedText { get; set; } = "0 MB/s";
+
+    public string PhysicalModel { get; set; } = "";
+    public string MediaType { get; set; } = "";
+    public string BusType { get; set; } = "";
+    public string DeviceTypeText { get; set; } = "";
 }
