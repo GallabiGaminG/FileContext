@@ -43,7 +43,25 @@ public partial class MainWindow : Window
         LoadDrives();
         StartDiskActivityTimer();
 
-        _fileIoMonitor.Start();
+        // ETW startup is guarded below so normal-user launch does not fail.
+        //  _fileIoMonitor.Start();
+
+        try
+        {
+            _fileIoMonitor.Start();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            LiveStatusText.Text = "LIMITED — File I/O monitoring requires Administrator";
+        }
+        catch (Exception ex)
+        {
+            LiveStatusText.Text = "LIMITED — File I/O monitoring unavailable";
+
+            System.Diagnostics.Debug.WriteLine(
+                $"File I/O monitoring could not start: {ex}");
+        }
+
     }
 
     private List<DriveInfoModel> LoadDriveInfo()
