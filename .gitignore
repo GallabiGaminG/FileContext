@@ -407,3 +407,5 @@ obj/
 *.db-shm
 *.db-wal
 .vs/
+COMMITLEME_roadmap_eski/ROADMAP.md
+COMMITLEME_roadmap_eski/ROADMAP_TR.md
